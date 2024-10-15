@@ -6,8 +6,14 @@ const taskSchema = new mongoose.Schema(
         description: { type: String },
         dueDate: { type: Date },
         status: { type: String, enum: ['open', 'completed'], default: 'open' },
-        createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-        assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        createdBy: { 
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: 'User' 
+        },
+        assignedTo: { 
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: 'User' 
+        },
     }, 
     { timestamps: true }
 );

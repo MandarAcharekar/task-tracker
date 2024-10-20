@@ -37,7 +37,7 @@ export const login = async (req, res) => {
             return res.status(400).json({ message: `Invalid Credentials`})
         }
 
-        const token = jwt.sign({userId:user._id}, process.env.JWT_SECRET, {expiresIn: '1h'});
+        const token = jwt.sign({ userId:user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
         res.cookie('token', token, {
             httpOnly: true,
@@ -47,6 +47,57 @@ export const login = async (req, res) => {
         });
 
         res.status(200).json({ message: `Login successful` });
+    }catch(error){
+        res.status(500).json({ message: `Internal Server Error - ${error.message}` });
+    }
+};
+
+export const getProfile = async (req, res) => {
+    try{
+        const user = await User.findById(req.user.userId).select('-password');
+        if(!user){
+            return res.status(404).json({ message: `User not found` });
+        }
+
+        res.status(200).json({ user });
+    }catch(error){
+        res.status(500).json({ message: `Internal Server Error - ${error.message}` });
+    }
+};
+
+export const updateProfile = async (req, res) => {
+    const { username, email, password } = req.body;
+
+    try{
+        const user = await User.findById(req.user.userId);
+        if (!user) return res.status(404).json({ message: `User not found` });
+
+        user.username = username || user.username;
+        user.email = email || user.email;
+
+        if(password){
+            const hashedPassword = await bcrypt.hash(password, 10);
+            user.password = hashedPassword;
+        }
+
+        await user.save();
+
+        res.status(200).json({ message: `Profile updated`, user });
+    }catch(error){
+        res.status(500).json({ message: `Internal Server Error - ${error.message}` });
+    }
+};
+
+export const deleteAccount = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.userId);
+        if(!user){
+            return res.status(404).json({ message: `User not found` });
+        }
+
+        await user.remove();
+
+        res.status(200).json({ message: `User account deleted` });
     }catch(error){
         res.status(500).json({ message: `Internal Server Error - ${error.message}` });
     }

@@ -52,6 +52,12 @@ export const login = async (req, res) => {
     }
 };
 
+export const logout = async (req, res) => {
+    res.clearCookie('token');
+
+    res.status(200).json({ message: `Logged out successfully` });
+};
+
 export const getProfile = async (req, res) => {
     try{
         const user = await User.findById(req.user.userId).select('-password');

@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 
 import User from '../models/user.model.js';
 
+// User management
 export const register = async (req, res) => {
     const { username, email, password } = req.body;
 
@@ -58,6 +59,7 @@ export const logout = async (req, res) => {
     res.status(200).json({ message: `Logged out successfully` });
 };
 
+// Profile management
 export const getProfile = async (req, res) => {
     try{
         const user = await User.findById(req.user.userId).select('-password');

@@ -20,9 +20,33 @@ export const createTask = async (req, res) => {
 };
 
 export const getTasks = async (req, res) => {
-    console.log("GET TASKS")
+    const { status, assignedTo, search, sortBy } = req.query;
+
     try{
-        const tasks = await Task.find({ assignedTo: req.user.userId });
+        const query = {};
+
+        if(assignedTo){
+            query.assignedTo = assignedTo;
+        }else{
+            query.assignedTo = req.user.userId;
+        }
+
+        if(status){
+            query.status = status;
+        }
+
+        if(search){
+            query.$or = [
+                { title: { $regex: search, $options: 'i' } },
+                { description: { $regex: search, $options: 'i' } },
+            ];
+        }
+
+        const sortOptions = {};
+        if (sortBy === 'dueDate') sortOptions.dueDate = 1; // Sort by due date (ascending)
+        else if (sortBy === 'createdAt') sortOptions.createdAt = -1; // Sort by creation date (descending)
+
+        const tasks = await Task.find(query).sort(sortOptions);
 
         res.status(200).json({ tasks });
     }catch(error){
@@ -59,7 +83,7 @@ export const updateTask = async (req, res) => {
         task.status = status || task.status;
 
         await task.save();
-        res.status(200).json({ message: 'Task updated', task });
+        res.status(200).json({ message: `Task updated`, task });
     }catch(error){
         res.status(500).json({ message: `Internal Server Error - ${error.message}` });
     }

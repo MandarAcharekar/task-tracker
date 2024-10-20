@@ -25,7 +25,6 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
     const { email, password } = req.body;
-    console.log(email, password)
     
     try{
         const user = await User.findOne({ email });
@@ -39,8 +38,15 @@ export const login = async (req, res) => {
         }
 
         const token = jwt.sign({userId:user._id}, process.env.JWT_SECRET, {expiresIn: '1h'});
-        res.status(200).json({ token: token});
 
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'Strict', 
+            maxAge: 3600000 // 1 hour
+        });
+
+        res.status(200).json({ message: `Login successful` });
     }catch(error){
         res.status(500).json({ message: `Internal Server Error - ${error.message}` });
     }

@@ -56,7 +56,6 @@ export const getTasks = async (req, res) => {
 
 export const getTaskById = async (req, res) => {
     const { id } = req.params;
-    console.log("GET TASK BY ID")
 
     try{
         const task = await Task.findById(id);
@@ -91,6 +90,7 @@ export const updateTask = async (req, res) => {
 
 export const deleteTask = async (req, res) => {
     const { id } = req.params;
+    
     try{
         const task = await Task.findById(id);
         if (!task) return res.status(404).json({ message: `Task not found` });

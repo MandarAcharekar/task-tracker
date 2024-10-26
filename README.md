@@ -63,3 +63,31 @@ This is a backend system for a Task Tracking and Management Application develope
   npm start
   ```
 
+## API Endpoints
+
+### User Authentication & Management
+- `POST` /api/user/register - Register a new user
+- `POST` /api/user/login - Log in with user credentials
+- `POST` /api/user/logout - Logout user
+
+- `GET` /api/user/profile - Get user profile
+- `PUT` /api/user/profile - Update user profile
+- `DELETE` /api/user/profile - Delete user profile
+
+
+### Task Management
+- `POST` /api/tasks - Create a new task
+- `GET` /api/tasks - Retrieve all tasks with filtering, sorting, and searching options
+- `GET` /api/tasks/:taskId - Retrieve a particular task
+- `PUT` /api/tasks/:taskId - Update a task
+- `DELETE` /api/tasks/:taskId - Delete a task
+
+- `POST` /api/tasks/:taskId/comments - Add a comment to a task
+- `POST` /api/tasks/:taskId/attachments - Add file attachments to a task
+
+### Team/Project Collaboration
+- `POST` /api/teams/create - Create a new team
+- `POST` /api/teams/:teamId/join - Join an existing team
+- `GET` /api/teams/:teamId - Get team details
+- `POST` /api/teams/:teamId/invite - Add a member to a team
+

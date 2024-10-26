@@ -20,10 +20,6 @@ This is a backend system for a Task Tracking and Management Application develope
   - Create or join teams.
   - Add/remove members from a team.
   - Retrieve team details and member information.
-  
-- **File Uploads ( --- In Progress ---)**
-  - Upload and attach files to tasks using `multer`.
-  - Supports file types like images and PDFs with size restrictions.
 
 ## Project Setup
 
@@ -53,12 +49,7 @@ This is a backend system for a Task Tracking and Management Application develope
   JWT_SECRET=your_jwt_secret_key
   ```
 
-4. Create an uploads folder in the root directory to store file attachments:
-  ```bash
-  mkdir uploads
-  ```
-
-5. Run the server:
+4. Run the server:
   ```bash
   npm start
   ```

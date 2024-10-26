@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import { connectDB } from './configs/db.js';
 import userRoutes from './routes/user.route.js'
 import taskRoutes from './routes/task.route.js'
+import teamRoutes from './routes/team.route.js'
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ connectDB();
 // API Routes
 app.use('/api/users', userRoutes);
 app.use('/api/tasks', taskRoutes);
+app.use('/api/teams', teamRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

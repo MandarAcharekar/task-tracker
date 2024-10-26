@@ -1,15 +1,26 @@
 import Task from '../models/task.model.js'
 
 export const createTask = async (req, res) => {
-    const { title, description, dueDate, assignedTo } = req.body;
+    const { title, description, dueDate, assignedTo, teamId } = req.body;
     
     try{
+        const team = await Team.findById(teamId);
+        if(!team){
+            return res.status(404).json({ message: `Team not found` });
+        }
+
+        // Ensure the assigned user is part of the team
+        if(!team.members.includes(assignedTo)) {
+            return res.status(400).json({ message: `Assigned user is not a member of the team` });
+        }
+
         const task = new Task({
             title,
             description,
             dueDate,
             createdBy: req.user.userId,
             assignedTo: assignedTo || req.user.userId,
+            teamId
         });
         await task.save();
 
@@ -55,12 +66,13 @@ export const getTasks = async (req, res) => {
 };
 
 export const getTaskById = async (req, res) => {
-    const { id } = req.params;
+    const { taskId } = req.params;
 
     try{
-        const task = await Task.findById(id);
-        console.log(task)
-        if (!task) return res.status(404).json({ message: `Task not found` });
+        const task = await Task.findById(taskId);
+        if (!task){
+            return res.status(404).json({ message: `Task not found` });
+        }   
 
         res.status(200).json({ task });
     }catch(error){
@@ -69,12 +81,14 @@ export const getTaskById = async (req, res) => {
 };
 
 export const updateTask = async (req, res) => {
-    const { id } = req.params;
+    const { taskId } = req.params;
     const { title, description, dueDate, status } = req.body;
 
     try{
-        const task = await Task.findById(id);
-        if (!task) return res.status(404).json({ message: `Task not found` });
+        const task = await Task.findById(taskId);
+        if (!task){
+            return res.status(404).json({ message: `Task not found` });
+        }
 
         task.title = title || task.title;
         task.description = description || task.description;
@@ -89,14 +103,66 @@ export const updateTask = async (req, res) => {
 };
 
 export const deleteTask = async (req, res) => {
-    const { id } = req.params;
+    const { taskId } = req.params;
     
     try{
-        const task = await Task.findById(id);
-        if (!task) return res.status(404).json({ message: `Task not found` });
+        const task = await Task.findById(taskId);
+        if (!task){
+            return res.status(404).json({ message: `Task not found` });
+        }
 
         await task.remove();
+        
         res.status(200).json({ message: `Task deleted` });
+    }catch(error){
+        res.status(500).json({ message: `Internal Server Error - ${error.message}` });
+    }
+};
+
+export const addComment = async (req, res) => {
+    const { taskId } = req.params;
+    const { text } = req.body;
+
+    try{
+        const task = await Task.findById(taskId);
+
+        if(!task){
+            return res.status(404).json({ message: `Task not found` });
+        }
+
+        task.comments.push({
+            text,
+            createdBy: req.user.userId,
+        });
+
+        await task.save();
+
+        res.status(200).json({ message: `Comment added successfully`, task });
+    }catch(error){
+        res.status(500).json({ message: `Internal Server Error - ${error.message}` });
+    }
+};
+
+export const addAttachment = async (req, res) => {
+    const { taskId } = req.params;
+    const { filename, fileUrl } = req.body;
+
+    try {
+        const task = await Task.findById(taskId);
+
+        if(!task){
+            return res.status(404).json({ message: `Task not found` });
+        }
+
+        task.attachments.push({
+            filename,
+            fileUrl,
+            uploadedBy: req.user.userId,
+        });
+
+        await task.save();
+
+        res.status(200).json({ message: `Attachment added successfully`, task });
     }catch(error){
         res.status(500).json({ message: `Internal Server Error - ${error.message}` });
     }

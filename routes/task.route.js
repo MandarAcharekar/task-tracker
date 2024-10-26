@@ -11,7 +11,7 @@ router.put('/:taskId',authMiddleware, updateTask);
 router.delete('/:taskId',authMiddleware, deleteTask);
 router.get('/',authMiddleware, getTasks);
 
-router.post('/:taskId/comments', authenticateUser, addComment);
-router.post('/:taskId/attachments', authenticateUser, addAttachment);
+router.post('/:taskId/comments', authMiddleware, addComment);
+router.post('/:taskId/attachments', authMiddleware, addAttachment);
 
 export default router;

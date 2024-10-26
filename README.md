@@ -69,7 +69,6 @@ This is a backend system for a Task Tracking and Management Application develope
 - `POST` /api/user/register - Register a new user
 - `POST` /api/user/login - Log in with user credentials
 - `POST` /api/user/logout - Logout user
-
 - `GET` /api/user/profile - Get user profile
 - `PUT` /api/user/profile - Update user profile
 - `DELETE` /api/user/profile - Delete user profile
@@ -81,7 +80,6 @@ This is a backend system for a Task Tracking and Management Application develope
 - `GET` /api/tasks/:taskId - Retrieve a particular task
 - `PUT` /api/tasks/:taskId - Update a task
 - `DELETE` /api/tasks/:taskId - Delete a task
-
 - `POST` /api/tasks/:taskId/comments - Add a comment to a task
 - `POST` /api/tasks/:taskId/attachments - Add file attachments to a task
 
@@ -91,3 +89,9 @@ This is a backend system for a Task Tracking and Management Application develope
 - `GET` /api/teams/:teamId - Get team details
 - `POST` /api/teams/:teamId/invite - Add a member to a team
 
+## Usage
+
+- **Register a User**: Use the registration endpoint to create a new user.
+- **Log In**: Use login to obtain a JWT token, which must be sent in the Authorization header for protected endpoints.
+- **Task Operations**: Create, update, delete, and view tasks. Add comments and attachments to tasks for collaboration.
+- **Teams**: Create teams, add/remove members, and manage team details.
